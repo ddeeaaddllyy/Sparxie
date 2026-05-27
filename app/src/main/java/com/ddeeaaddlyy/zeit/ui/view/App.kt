@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -42,17 +37,18 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ddeeaaddlyy.zeit.model.UiState
 import com.ddeeaaddlyy.zeit.model.ZeitTab
-import com.ddeeaaddlyy.zeit.model.ZeitUiState
 import com.ddeeaaddlyy.zeit.ui.theme.AsphaltWhite
 import com.ddeeaaddlyy.zeit.ui.theme.GlassStroke
 import com.ddeeaaddlyy.zeit.ui.theme.SoftRose
 import com.ddeeaaddlyy.zeit.ui.theme.SoftDarkBlack
 import com.ddeeaaddlyy.zeit.ui.theme.ZeitTheme
+import com.ddeeaaddlyy.zeit.ui.view.ObjectAccount.AccountScreen
+import com.ddeeaaddlyy.zeit.ui.view.ObjectHome.HomeScreen
 import com.ddeeaaddlyy.zeit.viewmodel.AppViewModel
 
 @Composable
@@ -71,7 +67,7 @@ fun ZeitApp(viewModel: AppViewModel) {
 
 @Composable
 private fun ZeitScreen(
-    state: ZeitUiState,
+    state: UiState,
     onTabSelected: (ZeitTab) -> Unit,
     onLoggingChanged: (Boolean) -> Unit,
     onTelegramChanged: (Boolean) -> Unit,
@@ -161,64 +157,7 @@ private fun ZeitHeader() {
 }
 
 @Composable
-private fun HomeScreen(
-    state: ZeitUiState,
-    onLoggingChanged: (Boolean) -> Unit,
-    onTelegramChanged: (Boolean) -> Unit,
-    onDiscordChanged: (Boolean) -> Unit,
-    onToggleService: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
-        LiquidGlassPanel {
-            ToggleRow(
-                title = "Enable logging",
-                subtitle = "Store application events",
-                checked = state.isButtonLoggingEnabled,
-                onCheckedChange = onLoggingChanged
-            )
-            ToggleRow(
-                title = "Enable the Telegram bot",
-                subtitle = "Receive commands from Telegram",
-                checked = state.isButtonTelegramBotEnabled,
-                onCheckedChange = onTelegramChanged
-            )
-            ToggleRow(
-                title = "Enable Discord Bot",
-                subtitle = "Sync Discord channel",
-                checked = state.isButtonDiscordBotEnabled,
-                onCheckedChange = onDiscordChanged
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f, fill = false))
-        Button(
-            onClick = onToggleService,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp),
-            shape = RoundedCornerShape(18.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (state.isServiceEnabled) AsphaltWhite else SoftRose,
-                contentColor = SoftDarkBlack
-            ),
-            contentPadding = PaddingValues(horizontal = 24.dp)
-        ) {
-            Text(
-                text = if (state.isServiceEnabled) "Turn OFF" else "Turn ON",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.sp
-            )
-        }
-    }
-}
-
-@Composable
-private fun ToggleRow(
+public  fun ToggleRow(
     title: String,
     subtitle: String,
     checked: Boolean,
@@ -284,45 +223,7 @@ private fun LogsScreen(logs: List<String>) {
 }
 
 @Composable
-private fun AccountScreen(state: ZeitUiState) {
-    LiquidGlassPanel(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(SoftRose, AsphaltWhite.copy(alpha = 0.74f))
-                    )
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Z",
-                color = SoftDarkBlack,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Black,
-                letterSpacing = 0.sp
-            )
-        }
-        Spacer(modifier = Modifier.height(14.dp))
-        Text(
-            text = state.accountName,
-            color = AsphaltWhite,
-            fontSize = 19.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.sp
-        )
-        Text(
-            text = "Local profile",
-            color = AsphaltWhite.copy(alpha = 0.58f),
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-private fun LiquidGlassPanel(
+public fun LiquidGlassPanel(
     modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit
@@ -404,7 +305,7 @@ private fun ZeitBottomBar(
 private fun ZeitScreenPreview() {
     ZeitTheme {
         ZeitScreen(
-            state = ZeitUiState(),
+            state = UiState(),
             onTabSelected = {},
             onLoggingChanged = {},
             onTelegramChanged = {},

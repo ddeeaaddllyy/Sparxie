@@ -8,15 +8,15 @@ import com.ddeeaaddlyy.zeit.model.States.LAUNCHING_ALL
 import com.ddeeaaddlyy.zeit.model.States.START_DISCORD
 import com.ddeeaaddlyy.zeit.model.States.PING_TEST
 import com.ddeeaaddlyy.zeit.model.ZeitTab
-import com.ddeeaaddlyy.zeit.model.ZeitUiState
+import com.ddeeaaddlyy.zeit.model.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class AppViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(ZeitUiState())
-    val uiState: StateFlow<ZeitUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var botState: States = ABORT
 
     fun selectTab(tab: ZeitTab) {
@@ -59,9 +59,9 @@ class AppViewModel : ViewModel() {
         }
     }
 
-    private fun MutableStateFlow<ZeitUiState>.updateWithLog(
+    private fun MutableStateFlow<UiState>.updateWithLog(
         log: String,
-        transform: (ZeitUiState) -> ZeitUiState
+        transform: (UiState) -> UiState
     ) {
         update { current ->
             val updated = transform(current)
