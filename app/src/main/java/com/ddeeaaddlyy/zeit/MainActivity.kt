@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ddeeaaddlyy.zeit.ui.theme.ZeitTheme
-import com.ddeeaaddlyy.zeit.ui.view.ZeitApp
+import com.ddeeaaddlyy.zeit.ui.app.ZeitApp
 import com.ddeeaaddlyy.zeit.viewmodel.AppViewModel
 
 class MainActivity : ComponentActivity() {
@@ -21,6 +21,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 
