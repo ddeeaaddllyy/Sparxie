@@ -1,6 +1,6 @@
 use crate::core::utils::debug::log;
 use crate::core::application::commands::{handler};
-use crate::core::application::commands::command::Command;
+use crate::core::application::commands::command::TelegramBotCommand;
 use crate::core::infrastructure::telegram_client::telegram_responce::{Response, Update};
 use reqwest::Proxy;
 
@@ -51,8 +51,8 @@ pub async fn start(token: String) {
 
             if let Some(msg) = update.message {
                 if let Some(text) = msg.text {
-                    let command: Command = Command::from_text(&text);
-                    let answer: String = handler::handle_command(command);
+                    let command: TelegramBotCommand = TelegramBotCommand::from_text(&text);
+                    let answer: String = handler::handle_telegram_command(command);
 
                     send_message(&client, &token, msg.chat.id, &answer).await;
                 }
