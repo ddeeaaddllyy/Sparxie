@@ -2,10 +2,15 @@ use crate::core::utils::debug::log;
 use crate::core::application::commands::{handler};
 use crate::core::application::commands::command::Command;
 use crate::core::infrastructure::telegram_client::telegram_responce::{Response, Update};
+use reqwest::Proxy;
 
 pub async fn start(token: String) {
-    let client = reqwest::Client::new();
-    let mut offset = 0;
+    let _proxy = Proxy::all("http://127.0.0.1:1080").unwrap();
+    let client = reqwest::Client::builder()
+        // .proxy(proxy)
+        .build()
+        .unwrap();
+    let mut offset: i64 = 0;
 
     log("Telegram bot started");
 
@@ -18,7 +23,8 @@ pub async fn start(token: String) {
         let resp = client.get(&url).send().await;
 
         if resp.is_err() {
-            log("Request error");
+            let req_error = format!("Request error: {}", resp.err().unwrap());
+            log(&*req_error);
             continue;
         }
 

@@ -16,7 +16,7 @@ pub async fn run() {
     io::stdout().flush().unwrap();
 
     let mut input: String = String::new();
-    println!("{}", input);
+    log(&*input);
     io::stdin().read_line(&mut input).unwrap();
 
     match input.trim() {
