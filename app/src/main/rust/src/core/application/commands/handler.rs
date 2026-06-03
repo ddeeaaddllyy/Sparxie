@@ -1,17 +1,17 @@
 use super::command::TelegramBotCommand;
-use serenity::all::{
-    CommandInteraction,
-    Context,
-    UserId
-};
 use crate::core::infrastructure::discord_client::discord_response::{
-    respond,
+    local_response,
     public_response
 };
-use crate::core::utils::voice_module::{
-    voice_channel,
-    join
+use crate::core::utils::voice_module::voice_channel;
+use songbird::get as songbird_get;
+use serenity::all::{
+    CommandInteraction
+    ,Context
+    ,CreateInteractionResponse
+    ,CreateInteractionResponseMessage
 };
+use serenity::builder::EditInteractionResponse;
 
 pub fn handle_telegram_command(command: TelegramBotCommand) -> String {
     match command {
@@ -43,43 +43,100 @@ impl DiscordBotCommandHandler {
                          /join — join your voice channel\n\
                          /help — show this message";
 
-        respond(command, ctx, text).await;
+        local_response(command, ctx, text).await;
     }
 
     pub async fn handle_join(ctx: &Context, command: &CommandInteraction) {
         let Some(guild_id) = command.guild_id else {
-            respond(command, ctx, "Use this command in a server.").await;
+            local_response(command, ctx, "Use this command in a server.").await;
             return;
         };
 
-        let user_id: UserId = command.user.id;
+        let _ = command.create_response(
+            &ctx.http,
+            CreateInteractionResponse::Defer(
+                CreateInteractionResponseMessage::new().ephemeral(true)
+            )
+        ).await;
+
+        let user_id = command.user.id;
 
         let Some(channel_id) = voice_channel(ctx, guild_id, user_id) else {
-            respond(command, ctx, "Join a voice channel first.").await;
+            let _ = command.edit_response(
+                &ctx.http,
+                EditInteractionResponse::new().content("Сначала зайди в голосовой канал")
+            ).await;
             return;
         };
 
-        match join(ctx, guild_id, channel_id).await {
-            Ok(_) => respond(command, ctx, "Joined voice channel").await,
+        let Some(manager) = songbird_get(ctx).await else {
+            let _ = command.edit_response(
+                &ctx.http,
+                EditInteractionResponse::new().content("Voice system not initialized")
+            ).await;
+            return;
+        };
+
+        if manager.get(guild_id).is_some() {
+            let _ = command.edit_response(
+                &ctx.http,
+                EditInteractionResponse::new().content("Already in a voice channel")
+            ).await;
+            return;
+        }
+
+        let result = manager.join(guild_id, channel_id).await;
+
+        match result {
+            Ok(_) => {
+                let _ = command.edit_response(
+                    &ctx.http,
+                    EditInteractionResponse::new().content("Join")
+                ).await;
+            }
             Err(e) => {
                 println!("Join error: {:?}", e);
-                respond(command, ctx, "Error with joining").await
+                let _ = command.edit_response(
+                    &ctx.http,
+                    EditInteractionResponse::new().content("Error")
+                ).await;
             }
         }
     }
 
     pub async fn handle_leave(ctx: &Context, command: &CommandInteraction) {
-        println!("Leaving voice channel");
+        let Some(guild_id) = command.guild_id else {
+            local_response(command, ctx, "Use this command in a server.").await;
+            return;
+        };
+
+        let manager = songbird_get(ctx).await;
+
+        let Some(manager) = manager else {
+            local_response(command, ctx, "Songbird not initialized").await;
+            return;
+        };
+
+        if manager.get(guild_id).is_some() {
+            match manager.remove(guild_id).await {
+                Ok(_) => local_response(command, ctx, "Left voice channel").await,
+                Err(e) => {
+                    local_response(command, ctx, &format!("Error leaving: {:?}", e)).await
+                }
+            }
+        } else {
+            local_response(command, ctx, "Not in a voice channel").await;
+        }
     }
 
-    pub async fn handle_play(ctx: &Context, command: &CommandInteraction) {}
+    pub async fn handle_play(_ctx: &Context, _command: &CommandInteraction) {}
 
-    pub async fn handle_stop(ctx: &Context, command: &CommandInteraction) {}
+    pub async fn handle_stop(_ctx: &Context, _command: &CommandInteraction) {}
 
-    pub async fn handle_found(ctx: &Context, command: &CommandInteraction) {}
+    pub async fn handle_found(_ctx: &Context, _command: &CommandInteraction) {}
 
     pub async fn handle_aboutproject(ctx: &Context, command: &CommandInteraction) {
-        let text = "this is new project. Enjoy sweetheart";
+        let text: &str = "lol";
 
         public_response(command, ctx, text).await;
     }

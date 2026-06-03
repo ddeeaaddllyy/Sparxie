@@ -33,13 +33,13 @@ pub enum DiscordBotCommand {
 impl DiscordBotCommand {
     pub fn from_text(text: &str) -> Self {
         match text {
-            "/help" => DiscordBotCommand::Help,
+            "help" => DiscordBotCommand::Help,
             "join" => DiscordBotCommand::Join,
-            "/leave" => DiscordBotCommand::Leave,
-            "/play" => DiscordBotCommand::Play,
-            "/stop" => DiscordBotCommand::Stop,
-            "/found" => DiscordBotCommand::Found,
-            "/aboutproject" => DiscordBotCommand::AboutProject,
+            "leave" => DiscordBotCommand::Leave,
+            "play" => DiscordBotCommand::Play,
+            "stop" => DiscordBotCommand::Stop,
+            "found" => DiscordBotCommand::Found,
+            "aboutproject" => DiscordBotCommand::AboutProject,
             _ => DiscordBotCommand::Unknown
         }
     }

@@ -1,6 +1,6 @@
 use serenity::all::{CommandInteraction, Context, CreateInteractionResponse, CreateInteractionResponseMessage};
 
-pub async fn respond(command: &CommandInteraction, ctx: &Context, text: &str) {
+pub async fn local_response(command: &CommandInteraction, ctx: &Context, text: &str) {
     let response = CreateInteractionResponse::Message(
         CreateInteractionResponseMessage::new()
             .content(text)
