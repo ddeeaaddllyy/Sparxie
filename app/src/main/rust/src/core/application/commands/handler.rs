@@ -64,7 +64,7 @@ impl DiscordBotCommandHandler {
         let Some(channel_id) = voice_channel(ctx, guild_id, user_id) else {
             let _ = command.edit_response(
                 &ctx.http,
-                EditInteractionResponse::new().content("Сначала зайди в голосовой канал")
+                EditInteractionResponse::new().content("First, go to voice chat")
             ).await;
             return;
         };
@@ -91,14 +91,13 @@ impl DiscordBotCommandHandler {
             Ok(_) => {
                 let _ = command.edit_response(
                     &ctx.http,
-                    EditInteractionResponse::new().content("Join")
+                    EditInteractionResponse::new().content("As you say")
                 ).await;
             }
             Err(e) => {
-                println!("Join error: {:?}", e);
                 let _ = command.edit_response(
                     &ctx.http,
-                    EditInteractionResponse::new().content("Error")
+                    EditInteractionResponse::new().content(&format!("Big (!!) connection error: {:?}", e))
                 ).await;
             }
         }
@@ -129,7 +128,9 @@ impl DiscordBotCommandHandler {
         }
     }
 
-    pub async fn handle_play(_ctx: &Context, _command: &CommandInteraction) {}
+    pub async fn handle_play(_ctx: &Context, _command: &CommandInteraction) {
+
+    }
 
     pub async fn handle_stop(_ctx: &Context, _command: &CommandInteraction) {}
 

@@ -1,4 +1,9 @@
-use serenity::all::{CommandInteraction, Context, CreateInteractionResponse, CreateInteractionResponseMessage};
+use serenity::all::{
+    CommandInteraction
+    ,Context
+    ,CreateInteractionResponse
+    ,CreateInteractionResponseMessage
+};
 
 pub async fn local_response(command: &CommandInteraction, ctx: &Context, text: &str) {
     let response = CreateInteractionResponse::Message(
@@ -15,6 +20,6 @@ pub async fn public_response(command: &CommandInteraction, ctx: &Context, text: 
         CreateInteractionResponseMessage::new()
         .content(text)
     );
-    
+
     let _ = command.create_response(&ctx.http, response).await;
 }
