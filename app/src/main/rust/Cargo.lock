@@ -3829,7 +3829,7 @@ dependencies = [
 
 [[package]]
 name = "zeit_bot"
-version = "0.4.3-df1-tf1"
+version = "0.4.3-df2-tf1"
 dependencies = [
  "dotenv",
  "reqwest 0.11.27",

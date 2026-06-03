@@ -10,7 +10,7 @@ pub async fn respond(command: &CommandInteraction, ctx: &Context, text: &str) {
     let _ = command.create_response(&ctx.http, response).await;
 }
 
-pub async fn global_response(command: &CommandInteraction, ctx: &Context, text: &str) {
+pub async fn public_response(command: &CommandInteraction, ctx: &Context, text: &str) {
     let response = CreateInteractionResponse::Message(
         CreateInteractionResponseMessage::new()
         .content(text)

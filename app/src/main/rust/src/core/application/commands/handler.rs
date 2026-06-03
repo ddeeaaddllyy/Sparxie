@@ -6,7 +6,7 @@ use serenity::all::{
 };
 use crate::core::infrastructure::discord_client::discord_response::{
     respond,
-    global_response
+    public_response
 };
 use crate::core::utils::voice_module::{
     voice_channel,
@@ -81,6 +81,6 @@ impl DiscordBotCommandHandler {
     pub async fn handle_aboutproject(ctx: &Context, command: &CommandInteraction) {
         let text = "this is new project. Enjoy sweetheart";
 
-        global_response(command, ctx, text).await;
+        public_response(command, ctx, text).await;
     }
 }

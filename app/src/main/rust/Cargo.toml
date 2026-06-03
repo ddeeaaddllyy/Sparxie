@@ -1,6 +1,6 @@
 [package]
 name = "zeit_bot"
-version = "0.4.3-df1-tf1" # prod.result.fix-discordfix-telegramfix
+version = "0.4.3-df2-tf1" # prod.result.fix-discordfix-telegramfix
 authors = ["ddeeaaddllyy"]
 edition = "2021"
 
@@ -28,11 +28,11 @@ debug = 0
 opt-level = 1
 
 [profile.release]
-opt-level = "z"
+opt-level = "z" # minimum binary size
 lto = true
-codegen-units = 1
+codegen-units = 1 # maximum optimization in release
 strip = true
 debug = 0
 
-[env]
+[env] # Should always be included if the proj is on Windows (idk why)
 CFLAGS = "-DNDEBUG"
