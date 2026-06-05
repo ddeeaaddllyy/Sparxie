@@ -1,7 +1,13 @@
-use serenity::all::{Context, CreateCommand, GuildId};
-use crate::core::application::commands::command::DiscordBotCommand::{
-    AboutProject, Help, Join, Leave, Play, Stop, Found};
 use crate::core::application::commands::command::DiscordBotCommand;
+use crate::core::application::commands::command::DiscordBotCommand::{
+    AboutProject, Found, Help, Join, Leave, Play, Stop};
+use serenity::all::{
+    CommandOptionType
+    , Context
+    , CreateCommand
+    , CreateCommandOption
+    , GuildId
+};
 
 
 pub async fn register_commands(ctx: &Context, guild_id: GuildId) {
@@ -34,6 +40,13 @@ pub fn build_leave() -> CreateCommand {
 pub fn build_play() -> CreateCommand {
     CreateCommand::new(DiscordBotCommand::as_text(Play))
         .description("Play music")
+        .add_option(
+            CreateCommandOption::new(
+                CommandOptionType::String,
+                "query",
+                "YouTube URL or search query"
+            ).required(true)
+        )
 }
 pub fn build_stop() -> CreateCommand {
     CreateCommand::new(DiscordBotCommand::as_text(Stop))

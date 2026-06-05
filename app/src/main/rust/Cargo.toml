@@ -1,6 +1,6 @@
 [package]
 name = "zeit_bot"
-version = "0.4.3-df4-tf1" # prod.result.fix-discordfix-telegramfix
+version = "0.4.4-df4-tf1" # prod.result.fix-discordfix-telegramfix
 authors = ["ddeeaaddllyy"]
 edition = "2021"
 
@@ -22,7 +22,7 @@ tokio = { version = "1", features = [
     "macros",
     "rt-multi-thread"
 ] }
-reqwest = { version = "0.11", default-features = false, features = [
+reqwest = { version = "0.12", default-features = false, features = [
     "json",
     "rustls-tls",
     "socks"
@@ -42,6 +42,3 @@ lto = true
 codegen-units = 1 # maximum optimization in release
 strip = true
 debug = 0
-
-[env] # Should always be included if the proj is on Windows (idk why)
-CFLAGS = "-DNDEBUG"

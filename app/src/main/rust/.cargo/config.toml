@@ -5,3 +5,6 @@ rustflags = ["-C", "target-cpu=native"]
 rustflags = [
     "-Ctarget-feature=+crt-static",
 ]
+
+[env] # Should always be included if ur pc based on Windows (idk why)
+CFLAGS = "-DNDEBUG"
