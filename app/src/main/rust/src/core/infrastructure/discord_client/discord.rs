@@ -62,17 +62,16 @@ impl EventHandler for Handler {
 }
 
 pub async fn start(token: String) {
-    let intents = GatewayIntents::GUILDS | GatewayIntents::GUILD_VOICE_STATES;
-    let songbird: Arc<Songbird> = Songbird::serenity();
+    let intents = GatewayIntents::GUILDS | GatewayIntents::GUILD_VOICE_STATES | GatewayIntents::GUILD_MESSAGES;
+    let _songbird: Arc<Songbird> = Songbird::serenity();
 
     let mut client = Client::builder(token, intents)
         .event_handler(Handler)
-        .type_map_insert::<songbird::SongbirdKey>(songbird.clone())
         .register_songbird()
         .await
         .expect("Client error");
 
-    if let Err(err) = client.start().await {
+    if let Err(err) = (&mut client).start().await {
         eprintln!("Client error: {err:?}");
     }
 }
