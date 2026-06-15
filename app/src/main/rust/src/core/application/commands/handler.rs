@@ -1,4 +1,3 @@
-use std::any::Any;
 use super::command::TelegramBotCommand;
 use crate::core::infrastructure::discord_client::discord_response::{
     local_response,
@@ -13,8 +12,8 @@ use serenity::all::{
     , CreateInteractionResponseMessage
 };
 use serenity::builder::EditInteractionResponse;
-use songbird::input::{Compose, File, YoutubeDl};
 use songbird::get as songbird_get;
+use songbird::input::YoutubeDl;
 
 pub fn handle_telegram_command(command: TelegramBotCommand) -> String {
     match command {
@@ -157,18 +156,7 @@ impl DiscordBotCommandHandler {
             return;
         };
 
-        let mut source = YoutubeDl::new(RClient::new(), url.to_string());
-        // let source = File::new("C:/Users/user/Zeit/app/src/main/rust/src/core/infrastructure/discord_client/OMGsong.mp3.mp3");
-
-        // let metadata = match source.aux_metadata().await {
-        //     Ok(meta) => meta,
-        //     Err(e) => {
-        //         local_response(command, ctx, &format!("Failed to get track info: {:?}", e)).await;
-        //         return;
-        //     }
-        // };
-        //
-        // let title = metadata.title.unwrap_or_else(|| "Unknown Title".to_string());
+        let source = YoutubeDl::new(RClient::new(), url.to_string());
 
         {
             let mut handler = handler_lock.lock().await;
