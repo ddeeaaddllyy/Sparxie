@@ -1,34 +1,43 @@
 use crate::core::application::commands::command::DiscordBotCommand;
 use crate::core::application::commands::command::DiscordBotCommand::{
-    Help, Join, Leave, Play, Stop, Found, AboutProject
+    AboutProject, Found, Help, Join, Leave, Play, Stop,
 };
 use crate::core::application::commands::handler::DiscordBotCommandHandler;
 use crate::core::infrastructure::discord_client::command_regestration::register_commands;
 use serenity::{
     async_trait,
-    model::{
-        application::Interaction
-        ,gateway::Ready
-        ,guild::Guild
-    },
-    prelude::*
+    model::{application::Interaction, gateway::Ready, guild::Guild},
+    prelude::*,
 };
-use songbird::{
-    SerenityInit
-    ,Songbird
-};
-use std::sync::Arc;
+use songbird::SerenityInit;
 
+/// Discord gateway event handler.
+///
+/// The handler itself is intentionally stateless. Serenity owns the HTTP client,
+/// gateway cache, and shared typemap, while Songbird stores its voice manager in
+/// that typemap when [`SerenityInit::register_songbird`] is called in [`start`].
+/// Keeping this type empty makes every command depend only on the fresh
+/// [`Context`] that Discord gives us for each event.
 pub struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
+    /// Registers slash commands when the bot is added to a new guild.
+    ///
+    /// Guild-scoped commands update almost immediately, which is much nicer for
+    /// local testing than global commands that can take up to an hour to refresh
+    /// in the Discord client.
     async fn guild_create(&self, ctx: Context, guild: Guild, is_new: Option<bool>) {
         if is_new.unwrap_or(false) {
             register_commands(&ctx, guild.id).await;
         }
     }
 
+    /// Registers slash commands for every guild received in the READY payload.
+    ///
+    /// Discord sends this event after the gateway session is established. At
+    /// this point the bot can safely create/update commands and accept voice
+    /// state events required by `/join` and `/play`.
     async fn ready(&self, ctx: Context, ready: Ready) {
         println!("Bot connected as {}", ready.user.name);
 
@@ -37,6 +46,11 @@ impl EventHandler for Handler {
         }
     }
 
+    /// Routes slash command interactions to their command-specific handler.
+    ///
+    /// The music commands are implemented in `commands::handler` so the Discord
+    /// gateway adapter stays thin: it only translates Discord's command name
+    /// into this project's [`DiscordBotCommand`] enum and then delegates.
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         let Interaction::Command(command) = interaction else {
             return;
@@ -61,9 +75,17 @@ impl EventHandler for Handler {
     }
 }
 
+/// Starts the Discord bot and blocks until the gateway client stops.
+///
+/// Required intents:
+/// - `GUILDS` receives guild and slash command interaction events.
+/// - `GUILD_VOICE_STATES` lets the cache identify the voice channel of the user
+///   who invoked `/join` or `/play`.
+///
+/// `MESSAGE_CONTENT` is deliberately not requested because this bot uses slash
+/// commands instead of reading text messages.
 pub async fn start(token: String) {
-    let intents = GatewayIntents::GUILDS | GatewayIntents::GUILD_VOICE_STATES | GatewayIntents::GUILD_MESSAGES;
-    let _songbird: Arc<Songbird> = Songbird::serenity();
+    let intents = GatewayIntents::GUILDS | GatewayIntents::GUILD_VOICE_STATES;
 
     let mut client = Client::builder(token, intents)
         .event_handler(Handler)

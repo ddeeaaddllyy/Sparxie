@@ -13,9 +13,27 @@ serenity = { version = "0.12", default-features = false, features = [
     "cache"
 ] }
 songbird = { version = "0.6.0", features = [
+    "builtin-queue",
     "driver",
     "rustls",
     "serenity"
+] }
+#
+# Songbird uses Symphonia to parse/decode media containers returned by yt-dlp.
+# YouTube commonly returns WebM/Opus (`mkv` parser in Symphonia) or M4A/AAC
+# (`isomp4` + `aac`). Keep the common open formats explicit so /play does not
+# silently queue a track that the runtime cannot parse.
+symphonia = { version = "0.5", default-features = false, features = [
+    "aac",
+    "alac",
+    "flac",
+    "isomp4",
+    "mkv",
+    "mp3",
+    "ogg",
+    "pcm",
+    "vorbis",
+    "wav"
 ] }
 tokio = { version = "1", features = [
     "rt",
