@@ -288,13 +288,16 @@ fn youtube_source(query: String) -> YoutubeDl<'static> {
     };
 
     source.user_args(vec![
+        "--proxy".into(),
+        "socks5://127.0.0.1:10801".into(),
+
+        "--cookies-from-browser".into(),
+        "firefox".into(),
+
         "--extractor-args".into(),
         "youtube:player_client=android".into(),
 
         "--force-ipv4".into(),
-
-        "--format".into(),
-        "bestaudio".into(),
 
         "--no-playlist".into(),
 
