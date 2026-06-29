@@ -277,6 +277,7 @@ async fn get_or_join_voice_call(
 fn youtube_source(query: String) -> YoutubeDl<'static> {
     let client = ReqwestClient::builder()
         .timeout(std::time::Duration::from_secs(60))
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
         .pool_idle_timeout(None)
         .build()
         .unwrap();
@@ -288,14 +289,8 @@ fn youtube_source(query: String) -> YoutubeDl<'static> {
     };
 
     source.user_args(vec![
-        "--proxy".into(),
-        "socks5://127.0.0.1:10801".into(),
-
-        "--cookies-from-browser".into(),
-        "firefox".into(),
-
         "--extractor-args".into(),
-        "youtube:player_client=android".into(),
+        "youtube:player_client=ios".into(),
 
         "--force-ipv4".into(),
 

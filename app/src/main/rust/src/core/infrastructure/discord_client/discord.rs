@@ -82,8 +82,6 @@ impl EventHandler for Handler {
 /// - `GUILD_VOICE_STATES` lets the cache identify the voice channel of the user
 ///   who invoked `/join` or `/play`.
 ///
-/// `MESSAGE_CONTENT` is deliberately not requested because this bot uses slash
-/// commands instead of reading text messages.
 pub async fn start(token: String) {
     let intents = GatewayIntents::GUILDS | GatewayIntents::GUILD_VOICE_STATES;
 
