@@ -1,0 +1,82 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/shared",
+    "crates/contracts",
+    "crates/auth-service",
+    "crates/requiem-service",
+    # Добавляется далее в этом этапе:
+    # "crates/zenith-service",
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Единые версии зависимостей для всего workspace.
+# Крейты подключают их через `<dep>.workspace = true`, чтобы исключить
+# рассинхронизацию версий между сервисами.
+# ─────────────────────────────────────────────────────────────────────────────
+[workspace.package]
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+authors = ["nedovolen"]
+
+[workspace.dependencies]
+# async runtime / web
+tokio = { version = "1", features = ["full"] }
+axum = "0.8"
+tower = "0.5"
+tower-http = { version = "0.6", features = [
+    "trace",
+    "cors",
+    "compression-full",
+    "timeout",
+    "request-id",
+    "util",
+] }
+
+# сериализация / типы
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+time = { version = "0.3", features = ["serde", "serde-well-known", "macros"] }
+
+# наблюдаемость
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# ошибки
+anyhow = "1"
+thiserror = "2"
+
+# конфигурация
+dotenvy = "0.15"
+
+# абстракции
+async-trait = "0.1"
+
+# ── подключаются на этапе 3 (инфраструктура) ────────────────────────────────
+sqlx = { version = "0.8", features = [
+    "runtime-tokio",
+    "tls-rustls",
+    "postgres",
+    "uuid",
+    "time",
+    "macros",
+    "migrate",
+] }
+redis = { version = "0.27", features = ["tokio-comp", "connection-manager"] }
+rdkafka = { version = "0.38", features = ["cmake-build"] }
+argon2 = "0.5"
+rand_core = { version = "0.6", features = ["std", "getrandom"] }
+jsonwebtoken = "9"
+validator = { version = "0.19", features = ["derive"] }
+
+# внутренние крейты
+shared = { path = "crates/shared" }
+contracts = { path = "crates/contracts" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"

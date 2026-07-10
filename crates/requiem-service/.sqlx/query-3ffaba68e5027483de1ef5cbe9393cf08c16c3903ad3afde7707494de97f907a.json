@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO requiem_profiles (uuid)\n            VALUES ($1)\n            ON CONFLICT (uuid) DO NOTHING\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3ffaba68e5027483de1ef5cbe9393cf08c16c3903ad3afde7707494de97f907a"
+}

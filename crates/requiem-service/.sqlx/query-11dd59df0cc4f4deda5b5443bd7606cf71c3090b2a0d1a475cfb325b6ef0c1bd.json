@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE requiem_profiles\n            SET email = $2, display_name = $3, updated_at = now()\n            WHERE uuid = $1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "11dd59df0cc4f4deda5b5443bd7606cf71c3090b2a0d1a475cfb325b6ef0c1bd"
+}

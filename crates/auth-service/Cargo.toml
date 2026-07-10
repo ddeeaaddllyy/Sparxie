@@ -1,0 +1,47 @@
+[package]
+name = "auth-service"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "nedovolen-auth"
+path = "src/main.rs"
+
+[dependencies]
+shared.workspace = true
+contracts.workspace = true
+
+# runtime / web
+tokio.workspace = true
+axum.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+
+# наблюдаемость
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# типы / сериализация
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+time.workspace = true
+
+# ошибки / абстракции
+thiserror.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+
+# инфраструктура
+sqlx.workspace = true
+redis.workspace = true
+rdkafka.workspace = true
+argon2.workspace = true
+rand_core.workspace = true
+jsonwebtoken.workspace = true
+
+# presentation
+validator.workspace = true

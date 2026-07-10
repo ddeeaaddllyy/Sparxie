@@ -1,0 +1,11 @@
+# Сборка по умолчанию использует offline-кэш SQLx (`.sqlx/`), чтобы проект
+# собирался без доступа к БД (CI, чистый клон, `cargo build`).
+#
+# `force = false`: значение применяется, только если переменная не задана
+# в окружении. Чтобы проверять запросы вживую против своей БД:
+#   export SQLX_OFFLINE=false
+#   export DATABASE_URL=postgres://...
+# После изменения SQL-запросов обновляйте кэш:
+#   cargo sqlx prepare --workspace
+[env]
+SQLX_OFFLINE = { value = "true", force = false }
