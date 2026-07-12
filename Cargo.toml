@@ -5,8 +5,7 @@ members = [
     "crates/contracts",
     "crates/auth-service",
     "crates/requiem-service",
-    # Добавляется далее в этом этапе:
-    # "crates/zenith-service",
+    "crates/zenith-service",
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
